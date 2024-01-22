@@ -1,37 +1,37 @@
-<form [formGroup]="userForm" (ngSubmit)="onSubmit">
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
   <mat-form-field class="col-4">
     <mat-label>Apellido</mat-label>
-    <input formControlName="lastName" matInput type="text">
+    <input formControlName="lastName" matInput type="text" />
   </mat-form-field>
 
   <mat-form-field class="col-4">
     <mat-label>Nombre</mat-label>
-    <input formControlName="firstName" matInput type="text">
+    <input formControlName="firstName" matInput type="text" />
   </mat-form-field>
 
-  <mat-form-field class="col-4">
+  <!-- <mat-form-field class="col-4">
     <mat-label>Carrera</mat-label>
-    <input formControlName="career" matInput type="email">
+    <input formControlName="career" matInput type="text" />
   </mat-form-field>
 
   <mat-form-field class="col-12">
     <mat-label>Dirección</mat-label>
-    <input formControlName="address" matInput type="email">
-  </mat-form-field>
+    <input formControlName="address" matInput type="text" />
+  </mat-form-field> -->
 
   <mat-form-field class="col-4">
     <mat-label>Correo</mat-label>
-    <input formControlName="email" matInput type="email">
+    <input formControlName="email" matInput type="email" />
   </mat-form-field>
 
   <mat-form-field class="col-4">
     <mat-label>Contraseña</mat-label>
-    <input formControlName="password" matInput type="text">
+    <input formControlName="password" matInput type="text" />
   </mat-form-field>
 
   <mat-form-field class="col-4">
     <mat-label>Roll</mat-label>
-    <mat-select  formControlName="role">
+    <mat-select formControlName="role">
       <mat-option value="ADMIN">Admin</mat-option>
       <mat-option value="USER">User</mat-option>
     </mat-select>
@@ -41,4 +41,4 @@
   </div>
 </form>
 
-<pre>{{userForm.value | json}}</pre>
+<pre>{{ userForm.value | json }}</pre>

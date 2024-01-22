@@ -1,27 +1,29 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-//Módulos
-import { LayoutModule } from './layout/layout.module';
+/* Components */
+import { AppComponent } from './app.component';
+import { NavbarComponent } from './core/components/navbar/navbar.component';
+/* Modules */
+import { SharedModule } from './shared/shared.module';
+import { StudentsModule } from './students/students.module';
 
 @NgModule({
   declarations: [
     //componentes
     AppComponent,
-    
+    NavbarComponent,
   ],
   imports: [
     // módulos
     BrowserModule,
     AppRoutingModule,
-    LayoutModule,
-    BrowserAnimationsModule,    
+    BrowserAnimationsModule,
+    SharedModule,
+    StudentsModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
