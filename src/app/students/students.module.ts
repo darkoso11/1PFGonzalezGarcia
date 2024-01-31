@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+/* Modules */
+import { SharedModule } from '../shared/shared.module';
+import { StudentsRoutingModule } from './students-routing.module';
 /* Components */
 import { ListaDeEstudiantesComponent } from './componets/lista-de-estudiantes/lista-de-estudiantes.component';
 import { EstudiantesFormComponent } from './componets/estudiantes-form/estudiantes-form.component';
-/* Modules */
-import { SharedModule } from '../shared/shared.module';
 import { StudentsComponent } from './componets/students/students.component';
 
 @NgModule({
@@ -13,7 +14,7 @@ import { StudentsComponent } from './componets/students/students.component';
     EstudiantesFormComponent,
     StudentsComponent,
   ],
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, StudentsRoutingModule],
   exports: [
     ListaDeEstudiantesComponent,
     EstudiantesFormComponent,

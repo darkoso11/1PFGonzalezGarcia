@@ -1,0 +1,84 @@
+<table mat-table [dataSource]="dataSource$" class="mat-elevation-z8">
+  <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+  <!-- id Column -->
+  <ng-container matColumnDef="id">
+    <!-- HEADER -->
+    <th mat-header-cell *matHeaderCellDef>No.</th>
+    <!-- CELDA -->
+    <td mat-cell *matCellDef="let course">{{ course.id }}</td>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="name">
+    <!-- HEADER -->
+    <th mat-header-cell *matHeaderCellDef>Nombre</th>
+    <!-- CELDA -->
+    <td mat-cell *matCellDef="let course">
+      {{ course.name }}
+    </td>
+  </ng-container>
+
+  <!-- Profesor Column -->
+  <ng-container matColumnDef="profesor">
+    <!-- HEADER -->
+    <th mat-header-cell *matHeaderCellDef>Profesor</th>
+    <!-- CELDA -->
+    <td mat-cell *matCellDef="let course">
+      {{ course.profesor | profesorShow | async  }}
+    </td>
+  </ng-container>
+
+  <!-- Actions Column -->
+  <ng-container matColumnDef="actions">
+    <!-- HEADER -->
+    <th mat-header-cell *matHeaderCellDef></th>
+    <!-- CELDA -->
+    <td mat-cell *matCellDef="let course">
+      <button mat-button color="accent" (click)="editCourseChanger(course.id)">
+        Editar
+      </button>
+      <button mat-button color="warn" (click)="deleteCourse(course.id)">
+        Borrar
+      </button>
+      <button mat-button color="primary" (click)="showCourse(course.id)">
+        Ver Más
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" [ngClass]="{ show: !!showCourseForm }">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 *ngIf="editActive" class="modal-title">
+          Editar Curso {{ course ? course.name : "" }}
+        </h5>
+        <button
+          type="button"
+          class="btn btn-secondary text-light"
+          (click)="showCourse()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        @if (course) {
+        <!-- Formulario -->
+        <app-courses-form
+          [editActive]="true"
+          [editCourse]="course.id"
+          [manageCourseFromOutside]="true"
+          (recoverCourse)="saveChanges($event)"
+        ></app-courses-form>
+        }
+      </div>
+    </div>
+  </div>
+</div>

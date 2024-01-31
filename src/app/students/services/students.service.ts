@@ -8,12 +8,20 @@ import { Observable, Subject } from 'rxjs';
 export class StudentsService {
   public students: IStudent[] = [
     {
+      id: 0,
+      firstName: 'Madara',
+      lastName: 'Uchiha',
+      email: 'madara@uchiha.com',
+      password: 'whatAboutTheSecond?',
+      role: 'ADMIN',
+    },
+    {
       id: 1,
       firstName: 'Naruto',
       lastName: 'Usumaki',
       email: 'narutohokague@konoha.com',
       password: 'iamthehokague1',
-      role: 'ADMIN',
+      role: 'STUDENT',
     },
     {
       id: 2,
@@ -22,6 +30,22 @@ export class StudentsService {
       email: 'allmaight1@UA.com',
       password: 'allmaigththebest1',
       role: 'USER',
+    },
+    {
+      id: 3,
+      firstName: 'Sasuke',
+      lastName: 'Uchiha',
+      email: 'sasuke@uchiha.com',
+      password: 'iamthebest1',
+      role: 'STUDENT',
+    },
+    {
+      id: 4,
+      firstName: 'Kakashi',
+      lastName: 'Hatake',
+      email: 'kakashi@hatake.com',
+      password: 'iamthebest2',
+      role: 'PROFESOR',
     },
   ];
   public students$: Subject<IStudent[]> = new Subject();
@@ -35,7 +59,7 @@ export class StudentsService {
     return this.students.find((st) => st.id === student.id);
   }
   /* Read */
-  getStudent(id: number) {
+  getStudent(id: number): IStudent | undefined {
     this.students$.next(this.students);
     return this.students.find((st) => st.id === id);
   }
@@ -64,5 +88,9 @@ export class StudentsService {
     this.students = this.students.filter((st) => st.id !== id);
     this.students$.next(this.students);
     return st;
+  }
+  /* Charge */
+  rechargeStudents() {
+    this.students$.next(this.students);
   }
 }

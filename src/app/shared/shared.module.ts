@@ -12,7 +12,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { FullNamePipe } from './pipes/full-name.pipe';
 import { Title20Directive } from './directives/title20.directive';
-
+import { MatListModule } from '@angular/material/list';
+import { MatDialogModule } from '@angular/material/dialog';
 @NgModule({
   declarations: [FullNamePipe, Title20Directive],
   imports: [
@@ -26,6 +27,8 @@ import { Title20Directive } from './directives/title20.directive';
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatListModule,
+    MatDialogModule,
   ],
   exports: [
     FullNamePipe,
@@ -39,6 +42,8 @@ import { Title20Directive } from './directives/title20.directive';
     MatInputModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatListModule,
+    MatDialogModule,
   ],
 })
 export class SharedModule {}

@@ -1,0 +1,11 @@
+<app-courses-form
+  [editActive]="editActive"
+  [editCourse]="editCourse"
+  (editActiveChangedTo)="editActive = $event"
+></app-courses-form>
+<div class="p-3">
+  <app-courses-list
+    (editActive)="editActive = $event"
+    (editCourse)="editCourse = $event"
+  ></app-courses-list>
+</div>

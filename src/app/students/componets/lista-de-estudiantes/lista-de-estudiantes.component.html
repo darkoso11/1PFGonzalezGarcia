@@ -46,11 +46,48 @@
     <th mat-header-cell *matHeaderCellDef></th>
     <!-- CELDA -->
     <td mat-cell *matCellDef="let user">
-      <button (click)="editStudentChanger(user.id)">Editar</button>
-      <button (click)="deleteStudent(user.id)">Borrar</button>
+      <button mat-button color="accent" (click)="editStudentChanger(user.id)">
+        Editar
+      </button>
+      <button mat-button color="warn" (click)="deleteStudent(user.id)">
+        Borrar
+      </button>
+      <button mat-button color="primary" (click)="showStudent(user.id)">
+        Ver Más
+      </button>
     </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
+
+<!-- Modal -->
+<div class="modal fade show" [ngClass]="{ show: !!showStudentForm }">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fs-5" id="exampleModalLabel">
+          Editar {{ student ? student.firstName : "" }}
+        </h5>
+        <button
+          type="button"
+          class="btn btn-secondary text-light"
+          (click)="showStudent()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        @if (student) {
+        <app-estudiantes-form
+          [editActive]="true"
+          [editStudent]="student.id"
+          [manageStudentFromOutside]="true"
+          (recoverStudent)="saveChanges($event)"
+        ></app-estudiantes-form>
+        }
+      </div>
+    </div>
+  </div>
+</div>

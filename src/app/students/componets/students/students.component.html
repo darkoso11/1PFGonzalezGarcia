@@ -1,10 +1,8 @@
-<div class="d-flex justify-content-center pt-5">
-  <app-estudiantes-form
-    [editActive]="editActive"
-    [editStudent]="editStudent"
-    (editActiveChangedTo)="editActive = $event"
-  ></app-estudiantes-form>
-</div>
+<app-estudiantes-form
+  [editActive]="editActive"
+  [editStudent]="editStudent"
+  (editActiveChangedTo)="editActive = $event"
+></app-estudiantes-form>
 
 <!-- Componente de la lista de alumnos -->
 <div class="p-3">

@@ -2,3 +2,11 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+a {
+  color: rgb(105, 240, 174);
+  text-decoration: none;
+}
+
+.modal-content {
+  background-color: #303030;
+}

@@ -1,44 +1,11 @@
-<mat-drawer-container class="example-container" autosize>
-  <mat-drawer #drawer class="example-sidenav" mode="side">
-    <p>Auto-resizing sidenav</p>
-    @if (showFiller) {
-    <p>Lorem, ipsum dolor sit amet consectetur.</p>
-    }
-    <button (click)="showFiller = !showFiller" mat-raised-button>
-      Toggle extra text
-    </button>
-  </mat-drawer>
-
-  <div class="example-sidenav-content">
-    <!-- TOOLBAR -->
-    <mat-toolbar>
-      <button
-        (click)="drawer.toggle()"
-        mat-icon-button
-        class="example-icon"
-        aria-label="Example icon-button with menu icon"
-      >
-        <mat-icon>menu</mat-icon>
-      </button>
-      <h1 appTitle20>My App</h1>
-      <span class="example-spacer"></span>
-      <button
-        mat-icon-button
-        class="example-icon favorite-icon"
-        aria-label="Example icon-button with heart icon"
-      >
-        <mat-icon>favorite</mat-icon>
-      </button>
-      <button
-        mat-icon-button
-        class="example-icon"
-        aria-label="Example icon-button with share icon"
-      >
-        <mat-icon>share</mat-icon>
-      </button>
-    </mat-toolbar>
-    <!-- TOOLBAR -->
-
-    <students></students>
-  </div>
-</mat-drawer-container>
+<mat-list role="list">
+  <mat-list-item role="listitem">
+    <a href="/" routerLink="/">Home</a>
+  </mat-list-item>
+  <mat-list-item role="listitem">
+    <a href="/students" routerLink="/students">Students</a>
+  </mat-list-item>
+  <mat-list-item role="listitem">
+    <a href="/courses" routerLink="/courses">Courses</a>
+  </mat-list-item>
+</mat-list>

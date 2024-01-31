@@ -1,3 +1,5 @@
+import { ICourse } from '../../courses/interfaces/course';
+
 export interface IStudent {
   id: number;
   firstName: string;
@@ -5,4 +7,5 @@ export interface IStudent {
   email: string;
   password: string;
   role: string;
+  courses?: ICourse[] | undefined;
 }

@@ -1,0 +1,41 @@
+<form
+  [formGroup]="courseForm"
+  (ngSubmit)="onSubmit()"
+  class="d-flex flex-wrap gap-1 justify-content-evenly align-items-center pt-5"
+>
+  <mat-form-field class="col-4">
+    <mat-label>Nombre</mat-label>
+    <input formControlName="name" matInput type="text" />
+  </mat-form-field>
+  <mat-form-field class="col-4">
+    <mat-label>Profesor</mat-label>
+    <mat-select formControlName="profesor">
+      <mat-option *ngFor="let profesor of profesors" [value]="profesor.id"
+        >{{ profesor.firstName }} {{ profesor.lastName }}</mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+  <div class="col-12 d-flex justify-content-center">
+    <button mat-raised-button color="accent">Guardar</button>
+  </div>
+</form>
+@if (!!manageCourseFromOutside) {
+<mat-list role="list" class="d-block mx-auto w-75">
+  @for (student of students; track student.id) {
+  <mat-list-item role="listitem">
+    <div class="d-flex justify-content-between align-items-center">
+      <span>{{ student.firstName }} {{ student.lastName }}</span>
+      @if (courseForm.value.students.includes(student.id)) {
+      <button mat-icon-button color="warn" (click)="removeStudent(student)">
+        <mat-icon>delete</mat-icon>
+      </button>
+      } @else {
+      <button mat-icon-button color="primary" (click)="addStudent(student)">
+        <mat-icon>add</mat-icon>
+      </button>
+      }
+    </div>
+  </mat-list-item>
+  }
+</mat-list>
+}

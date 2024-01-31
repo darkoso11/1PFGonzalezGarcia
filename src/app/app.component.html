@@ -1,1 +1,36 @@
-<app-navbar></app-navbar>
+<mat-drawer-container class="osbviguay-container" autosize>
+  <mat-drawer #drawer class="osbviguay-sidenav" mode="side">
+    <app-navbar></app-navbar>
+  </mat-drawer>
+  <div class="osbviguay-sidenav-content">
+    <!-- TOOLBAR -->
+    <mat-toolbar>
+      <button
+        (click)="drawer.toggle()"
+        mat-icon-button
+        class="osbviguay-icon"
+        aria-label="Example icon-button with menu icon"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+      <h1 appTitle20>OswalApp</h1>
+      <span class="osbviguay-spacer"></span>
+      <button
+        mat-icon-button
+        class="osbviguay-icon favorite-icon"
+        aria-label="Example icon-button with heart icon"
+      >
+        <mat-icon>favorite</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        class="osbviguay-icon"
+        aria-label="Example icon-button with share icon"
+      >
+        <mat-icon>share</mat-icon>
+      </button>
+    </mat-toolbar>
+    <!-- TOOLBAR -->
+    <router-outlet></router-outlet>
+  </div>
+</mat-drawer-container>

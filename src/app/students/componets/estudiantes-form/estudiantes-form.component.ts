@@ -8,9 +8,13 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { StudentsService } from '../../services/students.service';
+/* Interfaces */
 import { IStudent } from '../../interfaces/student';
-
+import { IRole } from '../../interfaces/roles';
+/* Services */
+import { StudentsService } from '../../services/students.service';
+import { CoursesService } from '../../../courses/services/courses.service';
+import { ICourse } from '../../../courses/interfaces/course';
 @Component({
   selector: 'app-estudiantes-form',
   templateUrl: './estudiantes-form.component.html',
@@ -20,11 +24,34 @@ export class EstudiantesFormComponent implements OnInit, OnChanges {
   @Input() editActive: boolean = false;
   @Input() editStudent: number | undefined;
   @Output() editActiveChangedTo: EventEmitter<boolean> = new EventEmitter();
+  @Output() recoverStudent: EventEmitter<IStudent> = new EventEmitter();
+  @Input() manageStudentFromOutside: boolean = false;
   public id: number = 0;
+  public roles: IRole[] = [
+    {
+      name: 'Administrator',
+      code: 'ADMIN',
+    },
+    {
+      name: 'User',
+      code: 'USER',
+    },
+    {
+      name: 'Student',
+      code: 'STUDENT',
+    },
+    {
+      name: 'Profesor',
+      code: 'PROFESOR',
+    },
+  ];
+  public courses: ICourse[] = [];
+  public coursesURIn: number[] = [];
   userForm: FormGroup;
   constructor(
     private fb: FormBuilder,
-    private _studentsService: StudentsService
+    private _studentsService: StudentsService,
+    private _coursesService: CoursesService
   ) {
     this.userForm = this.fb.group({
       lastName: this.fb.control('', Validators.required),
@@ -39,6 +66,7 @@ export class EstudiantesFormComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.getId();
+    this.getCourses();
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes) {
@@ -59,6 +87,7 @@ export class EstudiantesFormComponent implements OnInit, OnChanges {
             email: this.fb.control(student.email, Validators.required),
             role: this.fb.control(student.role, Validators.required),
           });
+          this.getCourses();
         }
       }
     }
@@ -71,7 +100,26 @@ export class EstudiantesFormComponent implements OnInit, OnChanges {
       error: (err: any) => console.error(err),
     });
   }
-
+  getCourses(): void {
+    this._coursesService.getCourses().subscribe({
+      next: (courses: ICourse[]) => {
+        this.courses = courses;
+        this.getCoursesURIn();
+      },
+      error: (err: any) => console.error(err),
+    });
+  }
+  getCoursesURIn(): void {
+    this.coursesURIn = this.courses
+      .filter((course: ICourse) => {
+        return course.students.find((student: IStudent | number) =>
+          typeof student !== 'number'
+            ? student.id === this.id
+            : student === this.id
+        );
+      })
+      .map((course) => course.id);
+  }
   onSubmit(): void {
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
@@ -85,14 +133,34 @@ export class EstudiantesFormComponent implements OnInit, OnChanges {
         role: this.userForm.value.role,
       };
       if (!!this.editActive) {
-        console.log(student);
-        this._studentsService.updateStudent(student);
-        this.editActive = false;
-        this.editStudent = undefined;
+        if (!this.manageStudentFromOutside) {
+          console.log(student);
+          this._studentsService.updateStudent(student);
+          this.editActive = false;
+          this.editStudent = undefined;
+          this.editActiveChangedTo.emit(this.editActive);
+        } else {
+          this.recoverStudent.emit(student);
+        }
       } else {
         this._studentsService.createStudent(student);
+        this.getId();
       }
       this.userForm.reset();
     }
+  }
+  removeCourse(course: ICourse): void {
+    this.coursesURIn.filter((id) => id !== course.id);
+    course.students = course.students.filter((student: IStudent | number) =>
+      typeof student !== 'number' ? student.id !== this.id : student !== this.id
+    );
+    this._coursesService.updateCourse(course);
+    this.getCourses();
+  }
+  addCourse(course: ICourse): void {
+    course.students.push(this.id);
+    this.coursesURIn.push(course.id);
+    this._coursesService.updateCourse(course);
+    this.getCourses();
   }
 }
