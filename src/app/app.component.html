@@ -14,6 +14,9 @@
         <mat-icon>menu</mat-icon>
       </button>
       <h1 appTitle20>OswalApp</h1>
+      @if (identity && identity.firstName && identity.lastName) {
+      <h2 appTitle20 class="mx-3">{{ identity | fullName }}</h2>
+      }
       <span class="osbviguay-spacer"></span>
       <button
         mat-icon-button

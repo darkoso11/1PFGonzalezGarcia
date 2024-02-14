@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -29,6 +30,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatSelectModule,
     MatListModule,
     MatDialogModule,
+    HttpClientModule,
   ],
   exports: [
     FullNamePipe,
@@ -44,6 +46,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatSelectModule,
     MatListModule,
     MatDialogModule,
+    HttpClientModule,
   ],
 })
 export class SharedModule {}

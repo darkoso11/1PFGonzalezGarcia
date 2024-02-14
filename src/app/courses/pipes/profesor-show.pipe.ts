@@ -26,15 +26,18 @@ export class ProfesorShowPipe implements PipeTransform {
     if (!!this.firstTime) {
       this.firstTime = false;
       this._studentsService.rechargeStudents();
-      /* await new Promise((resolve, reject) => {
+      await new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve('hola');
-        }, 10);
-      }); */
+        }, 500);
+      });
     }
     switch (typeof profesor) {
       case 'number':
-        profesor = this.students.find((st) => st.id === profesor) || profesor;
+        profesor =
+          this.students.find((st) => {
+            return st.id === profesor;
+          }) || profesor;
         if (typeof profesor === 'number') {
           return `Profesor con id: ${profesor}`;
         } else {

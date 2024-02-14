@@ -2,10 +2,23 @@
   <mat-list-item role="listitem">
     <a href="/" routerLink="/">Home</a>
   </mat-list-item>
+  @if (identity) { @if(identity.role == 'ADMIN' || identity.role == 'PROFESOR'){
   <mat-list-item role="listitem">
     <a href="/students" routerLink="/students">Students</a>
   </mat-list-item>
+  }
   <mat-list-item role="listitem">
     <a href="/courses" routerLink="/courses">Courses</a>
   </mat-list-item>
+  <mat-list-item role="listitem">
+    <button class="btn btn-warning" (click)="logout()">LogOut</button>
+  </mat-list-item>
+  } @else {
+  <mat-list-item role="listitem">
+    <a href="/auth/login" routerLink="/auth/login">Inicia Sesión</a>
+  </mat-list-item>
+  <mat-list-item role="listitem">
+    <a href="/auth/register" routerLink="/auth/register">Regístrate</a>
+  </mat-list-item>
+  }
 </mat-list>

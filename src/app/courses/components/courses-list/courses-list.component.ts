@@ -7,12 +7,15 @@ import { IStudent } from '../../../students/interfaces/student';
 /* Services */
 import { CoursesService } from '../../services/courses.service';
 import { StudentsService } from '../../../students/services/students.service';
+import { AuthService } from '../../../auth/services/auth.service';
 @Component({
   selector: 'app-courses-list',
   templateUrl: './courses-list.component.html',
   styleUrl: './courses-list.component.scss',
 })
 export class CoursesListComponent implements OnInit {
+  public identity$: Subject<IStudent | null>;
+  public identity: IStudent | null = null;
   @Output() editActive: EventEmitter<boolean> = new EventEmitter();
   @Output() editCourse: EventEmitter<number> = new EventEmitter();
   public courses: ICourse[] = [];
@@ -21,14 +24,35 @@ export class CoursesListComponent implements OnInit {
   public showCourseForm: boolean = false;
   public course: ICourse | undefined;
   public formMessage: string | undefined;
-  constructor(private _coursesService: CoursesService) {}
+  constructor(
+    private _authService: AuthService,
+    private _coursesService: CoursesService
+  ) {
+    this.identity$ = this._authService.identity$;
+    this.identity$.subscribe({
+      next: (student) => {
+        this.identity = student;
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
+  }
 
   ngOnInit(): void {
     this.getCourses();
+    this._authService.getIdentity();
+    this._coursesService.getCourses().subscribe({
+      next: (courses: ICourse[]) => {
+        this.courses = courses;
+        this.dataSource$.next(courses);
+      },
+      error: (err: any) => console.error(err),
+    });
   }
 
   getCourses(): void {
-    this._coursesService.getCourses().subscribe({
+    this._coursesService.courses$.subscribe({
       next: (cs: ICourse[]) => {
         this.courses = cs;
         this.dataSource$.next(cs);
@@ -43,7 +67,6 @@ export class CoursesListComponent implements OnInit {
   }
 
   showCourse(id: number | undefined = undefined) {
-    console.log(id);
     if (id !== undefined) {
       this.showCourseForm = true;
       this.course = this.courses.find((cs) => cs.id === id);
@@ -66,6 +89,15 @@ export class CoursesListComponent implements OnInit {
     }
   }
   deleteCourse(id: number) {
-    let deleteCourse = this._coursesService.deleteCourse(id);
+    this._coursesService.deleteCourse(id).subscribe({
+      next: (cs: ICourse | undefined) => {
+        this._coursesService.rechargeCourse();
+        this.formMessage = 'Curso eliminado';
+      },
+      error: (err) => {
+        console.error(err);
+        this.formMessage = 'No se pudo eliminar el curso';
+      },
+    });
   }
 }

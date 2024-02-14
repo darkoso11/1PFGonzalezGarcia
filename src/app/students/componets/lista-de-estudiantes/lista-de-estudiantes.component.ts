@@ -24,10 +24,17 @@ export class ListaDeEstudiantesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getStudents();
+    this._studentsService.getStudents().subscribe({
+      next: (students: IStudent[]) => {
+        this.students = students;
+        this.dataSource$.next(students);
+      },
+      error: (err: any) => console.error(err),
+    });
   }
 
   getStudents(): void {
-    this._studentsService.getStudents().subscribe({
+    this._studentsService.students$.subscribe({
       next: (st: IStudent[]) => {
         this.students = st;
         this.dataSource$.next(st);
@@ -64,6 +71,11 @@ export class ListaDeEstudiantesComponent implements OnInit {
   }
 
   deleteStudent(id: number) {
-    this._studentsService.deleteStudent(id);
+    this._studentsService.deleteStudent(id).subscribe({
+      next: (st) => {
+        this._studentsService.rechargeStudents();
+      },
+      error: (err) => console.error(err),
+    });
   }
 }

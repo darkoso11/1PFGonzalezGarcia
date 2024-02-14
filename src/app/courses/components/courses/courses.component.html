@@ -1,4 +1,7 @@
 <app-courses-form
+  *ngIf="
+    identity && (identity.role === 'ADMIN' || identity.role === 'PROFESOR')
+  "
   [editActive]="editActive"
   [editCourse]="editCourse"
   (editActiveChangedTo)="editActive = $event"

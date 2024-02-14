@@ -15,6 +15,7 @@ import { IRole } from '../../interfaces/roles';
 import { StudentsService } from '../../services/students.service';
 import { CoursesService } from '../../../courses/services/courses.service';
 import { ICourse } from '../../../courses/interfaces/course';
+import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-estudiantes-form',
   templateUrl: './estudiantes-form.component.html',
@@ -68,7 +69,7 @@ export class EstudiantesFormComponent implements OnInit, OnChanges {
     this.getId();
     this.getCourses();
   }
-  ngOnChanges(changes: SimpleChanges): void {
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
     if (changes) {
       if (
         this.editActive === true &&
@@ -76,7 +77,9 @@ export class EstudiantesFormComponent implements OnInit, OnChanges {
         this.editStudent !== this.id
       ) {
         this.id = this.editStudent;
-        let student = this._studentsService.getStudent(this.id);
+        let student = await firstValueFrom(
+          this._studentsService.getStudent(this.id)
+        );
         if (student) {
           this.userForm = this.fb.group({
             lastName: this.fb.control(student.lastName, Validators.required),
@@ -101,7 +104,7 @@ export class EstudiantesFormComponent implements OnInit, OnChanges {
     });
   }
   getCourses(): void {
-    this._coursesService.getCourses().subscribe({
+    this._coursesService.courses$.subscribe({
       next: (courses: ICourse[]) => {
         this.courses = courses;
         this.getCoursesURIn();
@@ -112,7 +115,7 @@ export class EstudiantesFormComponent implements OnInit, OnChanges {
   getCoursesURIn(): void {
     this.coursesURIn = this.courses
       .filter((course: ICourse) => {
-        return course.students.find((student: IStudent | number) =>
+        return course.students?.find((student: IStudent | number) =>
           typeof student !== 'number'
             ? student.id === this.id
             : student === this.id
@@ -135,7 +138,18 @@ export class EstudiantesFormComponent implements OnInit, OnChanges {
       if (!!this.editActive) {
         if (!this.manageStudentFromOutside) {
           console.log(student);
-          this._studentsService.updateStudent(student);
+          this._studentsService.updateStudent(student).subscribe({
+            next: (st: IStudent | undefined) => {
+              console.log(st);
+              if (!!st && !!st.id) {
+                alert('Student created');
+                setTimeout(() => {
+                  this._studentsService.rechargeStudents();
+                }, 500);
+              }
+            },
+            error: (err: any) => console.error(err),
+          });
           this.editActive = false;
           this.editStudent = undefined;
           this.editActiveChangedTo.emit(this.editActive);
@@ -143,7 +157,18 @@ export class EstudiantesFormComponent implements OnInit, OnChanges {
           this.recoverStudent.emit(student);
         }
       } else {
-        this._studentsService.createStudent(student);
+        this._studentsService.createStudent(student).subscribe({
+          next: (st: IStudent | undefined) => {
+            console.log(st);
+            if (!!st && !!st.id) {
+              alert('Student created');
+              setTimeout(() => {
+                this._studentsService.rechargeStudents();
+              }, 500);
+            }
+          },
+          error: (err: any) => console.error(err),
+        });
         this.getId();
       }
       this.userForm.reset();

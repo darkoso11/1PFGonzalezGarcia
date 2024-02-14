@@ -53,10 +53,15 @@ export class CoursesFormComponent implements OnInit, OnChanges {
       this.editCourse != this.id
     ) {
       this.id = this.editCourse;
-      let course = this._coursesService.getCourse(this.editCourse);
-      if (course) {
-        this.courseForm.patchValue(course);
-      }
+      this._coursesService.getCourse(this.editCourse).subscribe({
+        next: (course: ICourse | undefined) => {
+          if (course) {
+            console.log(course);
+            this.courseForm.patchValue(course);
+          }
+        },
+        error: (err: any) => console.error(err),
+      });
     }
   }
   getId() {
@@ -70,9 +75,11 @@ export class CoursesFormComponent implements OnInit, OnChanges {
   getTeachers() {
     this._studentsService.getStudents().subscribe({
       next: (students: IStudent[]) => {
+        console.log(students);
         this.profesors = students.filter((student) => {
           return ['PROFESOR', 'ADMIN'].includes(student.role);
         });
+        console.log(this.profesors);
       },
       error: (err: any) => console.error(err),
     });
@@ -101,13 +108,23 @@ export class CoursesFormComponent implements OnInit, OnChanges {
           this.recoverCourse.emit(course);
         }
         {
-          this._coursesService.updateCourse(course);
+          this._coursesService.updateCourse(course).subscribe({
+            next: (course: ICourse | undefined) => {
+              this._coursesService.rechargeCourse();
+            },
+            error: (err) => console.error(err),
+          });
           this.editActive = false;
           this.editCourse = undefined;
           this.editActiveChangedTo.emit(this.editActive);
         }
       } else {
-        this._coursesService.createCourse(this.courseForm.value);
+        this._coursesService.createCourse(this.courseForm.value).subscribe({
+          next: (course: ICourse | undefined) => {
+            this._coursesService.rechargeCourse();
+          },
+          error: (err) => console.error(err),
+        });
         this.getId();
       }
       this.courseForm.reset();

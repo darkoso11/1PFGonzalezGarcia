@@ -1,0 +1,17 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+  class="d-flex flex-wrap gap-1 justify-content-evenly align-items-center pt-5"
+>
+  <mat-form-field class="col-4">
+    <mat-label>Correo Electrónico</mat-label>
+    <input formControlName="email" matInput type="text" />
+  </mat-form-field>
+  <mat-form-field class="col-4">
+    <mat-label>Contraseña</mat-label>
+    <input formControlName="password" matInput type="text" />
+  </mat-form-field>
+  <div class="col-12 d-flex justify-content-center">
+    <button mat-raised-button color="accent">Login</button>
+  </div>
+</form>
