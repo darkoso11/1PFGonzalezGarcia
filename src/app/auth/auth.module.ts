@@ -7,10 +7,25 @@ import { SharedModule } from '../shared/shared.module';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { StudentsModule } from '../students/students.module';
+/* Store */
+import { EffectsModule } from '@ngrx/effects';
+import { AuthEffects } from './state/effects/auth.effects';
 
 @NgModule({
   declarations: [LoginComponent, RegisterComponent],
-  imports: [CommonModule, AuthRoutingModule, SharedModule, StudentsModule],
-  exports: [LoginComponent, RegisterComponent],
+  imports: [
+    CommonModule,
+    AuthRoutingModule,
+    SharedModule,
+    StudentsModule,
+    /* Store */
+    EffectsModule.forFeature([AuthEffects]),
+  ],
+  exports: [
+    LoginComponent,
+    RegisterComponent,
+    /* Store */
+    EffectsModule,
+  ],
 })
 export class AuthModule {}

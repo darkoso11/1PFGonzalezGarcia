@@ -6,16 +6,19 @@ import { ICourse } from '../../interfaces/course';
 import { IStudent } from '../../../students/interfaces/student';
 /* Services */
 import { CoursesService } from '../../services/courses.service';
-import { StudentsService } from '../../../students/services/students.service';
 import { AuthService } from '../../../auth/services/auth.service';
+/* Store */
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../core/state/app.state';
+import { AuthActions } from '../../../auth/state/actions/auth.actions';
+import { identitySelector } from '../../../auth/state/selectors/auth.selectors';
 @Component({
   selector: 'app-courses-list',
   templateUrl: './courses-list.component.html',
   styleUrl: './courses-list.component.scss',
 })
 export class CoursesListComponent implements OnInit {
-  public identity$: Subject<IStudent | null>;
-  public identity: IStudent | null = null;
+  public identity: IStudent | undefined;
   @Output() editActive: EventEmitter<boolean> = new EventEmitter();
   @Output() editCourse: EventEmitter<number> = new EventEmitter();
   public courses: ICourse[] = [];
@@ -26,10 +29,10 @@ export class CoursesListComponent implements OnInit {
   public formMessage: string | undefined;
   constructor(
     private _authService: AuthService,
-    private _coursesService: CoursesService
+    private _coursesService: CoursesService,
+    private _store: Store<AppState>
   ) {
-    this.identity$ = this._authService.identity$;
-    this.identity$.subscribe({
+    this._store.select(identitySelector).subscribe({
       next: (student) => {
         this.identity = student;
       },
@@ -40,6 +43,7 @@ export class CoursesListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._store.dispatch(AuthActions.loadIdentity());
     this.getCourses();
     this._authService.getIdentity();
     this._coursesService.getCourses().subscribe({

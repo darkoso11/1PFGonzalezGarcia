@@ -3,6 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 /* Services */
 import { AuthService } from '../../services/auth.service';
+/* Store */
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../core/state/app.state';
+import { AuthActions } from '../../state/actions/auth.actions';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +18,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private _authService: AuthService,
-    private _router: Router
+    private _router: Router,
+    private _store: Store<AppState>
   ) {
     this.form = this.fb.group({
       email: this.fb.control('', Validators.required),
@@ -30,7 +35,14 @@ export class LoginComponent {
         .subscribe((student) => {
           console.log(student);
           if (student) {
-            this._authService.saveIdentity(student);
+            this._store.dispatch(
+              AuthActions.loadIdentitySuccess({
+                identityState: {
+                  loaded: true,
+                  identity: student,
+                },
+              })
+            );
             alert('Welcome ' + student.firstName);
             this._router.navigate(['/']);
           } else {

@@ -6,17 +6,24 @@ import { Subject } from 'rxjs';
 import { IStudent } from '../../../students/interfaces/student';
 /* Services */
 import { AuthService } from '../../../auth/services/auth.service';
+/* Store */
+import { Store } from '@ngrx/store';
+import { AppState } from '../../state/app.state';
+import { AuthActions } from '../../../auth/state/actions/auth.actions';
+import { identitySelector } from '../../../auth/state/selectors/auth.selectors';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent implements OnInit {
-  public identity$: Subject<IStudent | null>;
-  public identity: IStudent | null = null;
-  constructor(private _authService: AuthService, private _router: Router) {
-    this.identity$ = this._authService.identity$;
-    this.identity$.subscribe({
+  public identity: IStudent | undefined;
+  constructor(
+    private _authService: AuthService,
+    private _router: Router,
+    private _store: Store<AppState>
+  ) {
+    this._store.select(identitySelector).subscribe({
       next: (student) => {
         this.identity = student;
       },
@@ -27,11 +34,14 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._store.dispatch(AuthActions.loadIdentity());
     this._authService.getIdentity();
   }
 
   logout() {
-    this._authService.removeIdentity();
+    this._store.dispatch(
+      AuthActions.loadIdentityFailure({ error: 'User logged out' })
+    );
     this._router.navigate(['/auth/login']);
   }
 }
